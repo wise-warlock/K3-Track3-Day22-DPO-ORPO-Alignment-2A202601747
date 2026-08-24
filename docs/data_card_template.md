@@ -1,10 +1,23 @@
-# Data Card
+# Data Card: Preference Alignment Dataset
 
-- Dataset name:
-- Source:
-- License/permission:
-- Schema:
-- Labeling rubric:
-- Known biases:
-- Safety/PII checks:
-- Train/validation/test split method:
+- **Dataset name**: Sample Technical & Machine Learning Preference Pairs (`sample_preferences.jsonl`)
+- **Source**: Curated technical questions and comparative answers focusing on machine learning concepts, neural network architectures, and optimization principles.
+- **License/permission**: MIT License (for educational and research benchmarking in preference alignment).
+- **Schema**:
+  - `prompt` (`str`, min_length=1): Technical question or instruction regarding AI/ML concepts.
+  - `chosen` (`str`, min_length=1): Accurate, well-explained, and technically sound response.
+  - `rejected` (`str`, min_length=1): Factually inaccurate, oversimplified, or misleading alternative response.
+  - `metadata` (`dict[str, Any]`): Contextual metadata including `domain` ("education") and `rubric` ("accuracy").
+- **Labeling rubric**:
+  - **Accuracy & Correctness**: The chosen answer must describe mathematical mechanisms accurately (e.g. self-attention weight allocation, gradient descent weight updates, GAN minimax game, bias-variance tradeoff) whereas the rejected answer contains critical conceptual fallacies.
+  - **Clarity & Completeness**: Responses must provide necessary context without irrelevant filler.
+  - **Distinctiveness**: Chosen and rejected responses must distinctly differ in technical correctness (validated after case and whitespace normalization).
+- **Known biases**:
+  - **Length bias**: Chosen responses are generally slightly more verbose (25-45 words) due to comprehensive explanations compared to rejected responses (10-20 words).
+  - **Domain specificity**: High density of deep learning and machine learning educational concepts; general conversational or code generation tasks are not covered.
+- **Safety/PII checks**:
+  - Automated regex scanning and validation during data ingestion to ensure no personally identifiable information (PII such as phone numbers, emails, addresses) or security keys are contained in prompts or completions.
+- **Train/validation/test split method**:
+  - Grouped by unique `prompt` to prevent data leakage across splits.
+  - Deterministically shuffled using seed `42`.
+  - Partitioned by prompt groups ensuring $P_{\text{train}} \cap P_{\text{val}} = \emptyset$ while maintaining $N_{\text{train}} + N_{\text{val}} = N_{\text{total}}$.
